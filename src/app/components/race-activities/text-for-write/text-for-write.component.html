@@ -1,0 +1,24 @@
+<div class="container">
+	<div class="block-activities">
+		<div class="all-text">
+			<div class="text"  #textBlock >
+				<span class="text-for-write" *ngFor="let word of textForWrite">{{' '}}<span 
+				class="letter"
+				[ngClass]="{
+					'valid': letter.valid === true,
+					'invalid': letter.invalid === true,
+					'cursor': letter.cursor === true,
+					'all-false': letter.allFalse === true,
+					'selected': letter.selected === true,
+					'cursor-first': letter.firstLetter === true && word.id === idForSendWord && (!inputValue || startInput) 
+				}" *ngFor="let letter of word.letters">{{letter.value}}</span></span>	
+			</div>
+			
+
+		<div class="block-input-text">
+			<form action="" [formGroup]="form">
+				<input formControlName="inputText" class="input-text" #inputField maxLength="16" (click)="getCursorCodeClick($event)" (input)="getCursorCode($event)" (keydown)="getKeyCode($event)" (keyup)="cdk($event)" (input)="checkLetter($event)" type="text">					
+			</form>
+		</div>
+	</div>
+</div>

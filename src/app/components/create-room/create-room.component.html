@@ -1,0 +1,19 @@
+<div class="container">
+	<h2>For create new Room You need to input you name and key send to your friend</h2>
+	<div class="clip-board">
+		<p class="clip-key"><span>Key:</span> {{roomName}}</p> 
+	</div>
+	<div class="buttons">
+		<button class="copy-button" mat-raised-button color="accent" (click)="copyText()">Copy</button>	
+		<button class="new-button" mat-raised-button color="primary" (click)="generateNewName()">New Key</button>	
+	</div>
+		
+	<div class="form">
+		<form [formGroup]="form" action="">
+			<h2>Enter your name</h2>
+			<input formControlName="userName" class="input-name-room" type="text">	
+		</form>
+		
+		<button mat-raised-button color="accent" (click)="createRoom()" [disabled]="form.invalid" class="btn-create-room">Create room</button>	
+	</div>
+</div>

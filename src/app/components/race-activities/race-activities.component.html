@@ -1,0 +1,56 @@
+<div class="container">
+	<div class="online-key-block" *ngIf="online">
+			<p>Key: {{roomName}}</p>
+			<button class="copy-button" mat-raised-button color="accent" (click)="copyText()">Copy</button>	
+			
+	</div>
+	<div class="users-countdown-text">
+		<!-- block with users -->
+		<div class="container-users">
+			<div class="block-cars">
+				<div *ngIf="online; else offlineBlockUser">
+					<div class="text-name" *ngFor="let user of users$ | async">
+						<div class="block-name" [ngStyle]="setStyleUserDistance(user.distance)">
+							<span class="user-name">{{user.userName.slice(0, user.userName.length - 10)}}</span><span class="user-state" [ngClass]="{
+								'ready': user.ready === true,
+								'not-ready': user.ready === false	
+							}"></span>
+						</div>
+					</div>
+				</div>
+				
+			</div>	
+		</div>
+
+		<!-- countdown -->
+		<div class="countdown">
+			<app-countdown (secondsEmitter)="outputSeconds($event)"></app-countdown>
+		</div>
+
+		<!-- text and input -->
+		<div class="">
+			<app-text-for-write (emitDistance)="changeUserDistance($event)" [disabledInput]="disabledInput"  [textForWrite]="text$ | async"></app-text-for-write>
+		</div>	
+	</div>
+
+	<!-- ready button and reset button -->
+	<div class="button-reset-ready-block">
+		<!-- ready button -->
+		<button mat-raised-button color="accent" class="button-ready" [disabled]="blockBtnReady || blockRoom || blockBtnReset === false" (click)="ready()">Ready</button>
+		<!-- reset button -->
+		<button mat-raised-button color="warn" class="button-reset" [disabled]="blockBtnReset" (click)="reset()">New Race</button>
+	</div>
+
+	<ng-template  #offlineBlockUser>
+		<div class="text-name" >
+			<div class="block-name">
+				<span class="user-name" [ngStyle]="setStyleUserDistance(userDistance)">You</span>
+			</div>
+		</div>
+	</ng-template>
+
+	<div class="start-component" *ngIf="counter > 0">
+		<app-start [counter]="counter"></app-start>	
+	</div>
+</div>
+

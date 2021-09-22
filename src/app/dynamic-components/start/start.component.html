@@ -1,0 +1,19 @@
+<!-- <p class="counter">{{math.round(counter)}}</p> -->
+<div class="container">
+	<div class="circle" [ngClass]="{
+		'red': counter > 3
+	}" color="red"></div>
+	
+	<div class="circle" [ngClass]="{
+		'yellow': counter <= 3 || counter <= 2
+	}" color="yellow"></div>
+
+	<div class="circle" [ngClass]="{
+		'yellow': counter <= 2
+	}" color="yellow"></div>
+	
+	<div class="circle" [ngClass]="{
+		'green': counter == 0.5
+	}" color="green"></div>
+
+</div>

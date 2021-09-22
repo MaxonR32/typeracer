@@ -1,0 +1,30 @@
+.container {
+	background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("../../img/gory_voda_tuman_220822_1920x1080.jpg");
+	height: 100%;
+	
+	background-size:cover;
+	background-repeat: no-repeat;
+ 	background-attachment: fixed;
+	background-position: center;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;	
+
+	@media (max-width: 479px) {
+		.links {
+			display: flex;
+			flex-direction: column;
+		}
+	}
+	
+	.header {
+		text-align: center;
+		color: #fff;
+	} 
+
+	.link {
+		margin: 10px;
+	}
+}
+

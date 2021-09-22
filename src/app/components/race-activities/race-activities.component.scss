@@ -1,0 +1,67 @@
+.container {
+	background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("../../img/kosmonavt_gravitatsiia_skafandr_138001_1280x720.jpg");
+	background-size:cover;
+	background-repeat: no-repeat;
+ 	background-attachment: fixed;
+	background-position: center;
+	height: 100%;
+
+	.online-key-block {
+		color: #fff;
+		display: flex;
+		flex-direction: column;		
+		justify-content: center;
+		align-items: center;
+	}
+
+	.users-countdown-text {
+		background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
+	}	
+
+	.container-users{
+		padding-top: 50px;
+		display: flex;
+		justify-content: center;
+		
+		.block-cars {
+			width: 1000px;
+
+			.block-name {
+				display: flex;
+				justify-content: space-between;
+				border-bottom: 5px;
+				border-bottom-style: dashed;
+				border-color: #ccc;
+				.user-name {
+					color: #fff;
+				}
+				
+				.user-state {
+					width: 15px;
+				}
+				.ready {
+					background-color: green;
+				}			
+				.not-ready {
+					background-color: red;
+				}
+				.img-car {
+					width: 50px;
+					height: 40px;	
+				}
+			}
+		}	
+	}
+
+	.button-reset-ready-block {
+		display: flex;
+		justify-content: space-around;
+	}
+
+	.start-component {
+		position: fixed;
+		bottom: 30%;
+		right: 50%;
+	}
+
+}

@@ -1,0 +1,13 @@
+<div class="container">
+	<h2>To join in Room you need to input key from your friends and enter your name</h2>
+	<div class="form">
+		<form [formGroup]="form" action="">
+			<h2>Enter Key</h2>
+			<input formControlName="roomName" class="input-name-room" type="text" >
+			<h2>Enter your name</h2>
+			<input formControlName="userName" class="input-name-room" type="text">	
+		</form>
+		
+		<button (click)="joinRoom()" [disabled]="form.invalid" mat-raised-button color="primary" class="btn-create-room">Enter in room</button>	
+	</div>
+</div>
