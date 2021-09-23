@@ -250,7 +250,7 @@ export class RaceActivitiesComponent implements OnInit, OnDestroy, AfterViewInit
   outputSeconds(event) {
     // if time is down
     this.seconds += 1
-    if(event === 50) {
+    if(event === 0) {
       this.store.dispatch(FinishActions.finishTrue())
     }
   }
