@@ -1,13 +1,22 @@
 <div class="container">
 	<h2>To join in Room you need to input key from your friends and enter your name</h2>
-	<div class="form">
-		<form [formGroup]="form" action="">
+		<form [formGroup]="form" class="form" action="" >
+
 			<h2>Enter Key</h2>
-			<input formControlName="roomName" class="input-name-room" type="text" >
+			<input formControlName="roomName" name="roomName" class="input-name-room" type="text" >				
+			<mat-error *ngIf="rooomNameInput.invalid && rooomNameInput ">
+				<mat-error class="error" *ngIf="rooomNameInput.errors?.minlength || rooomNameInput.errors?.maxlength">Length of key does not fit</mat-error>
+			</mat-error>	
+
 			<h2>Enter your name</h2>
-			<input formControlName="userName" class="input-name-room" type="text">	
+			<input formControlName="userName" matInput class="input-name-room" type="text">
+
+			<mat-error *ngIf="userNameInput.invalid && userNameInput ">
+				<mat-error class="error" *ngIf="userNameInput.errors?.minlength">Min length is 3</mat-error>
+				<mat-error class="error" *ngIf="userNameInput.errors?.maxlength">Max length is 10</mat-error>
+			</mat-error>	
+
 		</form>
 		
 		<button (click)="joinRoom()" [disabled]="form.invalid" mat-raised-button color="primary" class="btn-create-room">Enter in room</button>	
-	</div>
 </div>

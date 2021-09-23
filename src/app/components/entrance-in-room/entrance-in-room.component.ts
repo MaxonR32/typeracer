@@ -33,15 +33,23 @@ export class EntranceInRoomComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = new FormGroup({
-      roomName: new FormControl(null, [Validators.required, Validators.minLength(3)]),
-      userName: new FormControl(null, [Validators.required, Validators.minLength(3)])
+      roomName: new FormControl(null, [Validators.required, Validators.minLength(20), Validators.maxLength(20)]),
+      userName: new FormControl(null, [Validators.required, Validators.minLength(3), Validators.maxLength(10)])
     });
     this.uuidNameUser = uuidv4().slice(0, 10)
 
   }
 
-  get roomName(): string {
+  get roomNames(): string {
     return this.form.value.roomName
+  }
+
+  get rooomNameInput() {
+    return this.form.get('roomName') as FormControl
+  }
+
+  get userNameInput() {
+    return this.form.get('userName') as FormControl
   }
 
   get userName(): string {
@@ -53,12 +61,12 @@ export class EntranceInRoomComponent implements OnInit {
   }
 
   joinRoom() {
-    this.onlineService.searchRoom(this.roomName).pipe(takeUntil(this.onDestroy)).subscribe(data => {
+    this.onlineService.searchRoom(this.roomNames).pipe(takeUntil(this.onDestroy)).subscribe(data => {
       if(data) {
         this.onDestroy.next()
-        this.onlineService.joinRoom(this.createUserName(), this.roomName)
-        this.store.dispatch(OnlineActions.changeOnlineToTrue({onlineData: {online: true, roomName: this.roomName, userName: this.createUserName()}}))
-        this.store.dispatch(OnlineActions.joinRoom({joinData: {roomName: this.roomName, userName: this.createUserName()}}))
+        this.onlineService.joinRoom(this.createUserName(), this.roomNames)
+        this.store.dispatch(OnlineActions.changeOnlineToTrue({onlineData: {online: true, roomName: this.roomNames, userName: this.createUserName()}}))
+        this.store.dispatch(OnlineActions.joinRoom({joinData: {roomName: this.roomNames, userName: this.createUserName()}}))
         this.route.navigate(['/race'])       
       }
       else {

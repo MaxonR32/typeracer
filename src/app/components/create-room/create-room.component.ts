@@ -7,14 +7,15 @@ import { v4 as uuidv4 } from 'uuid';
 import { ClipboardService } from 'ngx-clipboard';
 
 import { MaterialServices } from '../../shared/services/material.services'
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-create-room',
   templateUrl: './create-room.component.html',
-  styleUrls: ['./create-room.component.scss']
+  styleUrls: ['./create-room.component.scss'],
 })
 export class CreateRoomComponent implements OnInit {
-
+  isOpen = 'open'
   form: FormGroup;
   randomNumber: number
   nameRoom: string
@@ -34,7 +35,7 @@ export class CreateRoomComponent implements OnInit {
   ngOnInit(): void {
     this.nameRoom = uuidv4().slice(0, 20)
     this.form = new FormGroup({
-      userName: new FormControl(null, [Validators.required, Validators.minLength(3)])
+      userName: new FormControl(null, [Validators.required, Validators.minLength(3), Validators.maxLength(10)])
     });
   }
 
@@ -44,6 +45,10 @@ export class CreateRoomComponent implements OnInit {
 
   get userName(): string {
     return this.form.value.userName
+  }
+
+  get userNameInput() {
+    return this.form.get('userName') as FormControl
   }
 
   createRoom() {

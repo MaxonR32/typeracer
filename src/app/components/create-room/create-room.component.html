@@ -8,12 +8,17 @@
 		<button class="new-button" mat-raised-button color="primary" (click)="generateNewName()">New Key</button>	
 	</div>
 		
-	<div class="form">
-		<form [formGroup]="form" action="">
+		<form [formGroup]="form" class="form" action="">
 			<h2>Enter your name</h2>
-			<input formControlName="userName" class="input-name-room" type="text">	
+			<input formControlName="userName" class="input-name-room" type="text">
+
+				<mat-error class="error-div" *ngIf="userNameInput.invalid">
+					<mat-error class="error" *ngIf="userNameInput.errors?.minlength">Min length is 3</mat-error>
+					<mat-error class="error" *ngIf="userNameInput.errors?.maxlength">Max length is 10</mat-error>
+				</mat-error>	
+					
+			
 		</form>
 		
 		<button mat-raised-button color="accent" (click)="createRoom()" [disabled]="form.invalid" class="btn-create-room">Create room</button>	
-	</div>
 </div>
