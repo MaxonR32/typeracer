@@ -2,6 +2,7 @@
 	<div class="block-activities">
 		<div class="all-text">
 			<div class="text"  #textBlock >
+				<app-loader *ngIf="textForWrite.length === 0"></app-loader>
 				<span class="text-for-write" *ngFor="let word of textForWrite">{{' '}}<span 
 				class="letter"
 				[ngClass]="{

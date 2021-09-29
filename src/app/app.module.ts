@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MaterialModule } from './material.module'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 // routing
 import { AppRoutingModule } from './app-routing.module';
 
@@ -19,11 +21,11 @@ import { RaceActivitiesComponent } from './components/race-activities/race-activ
 import { TextForWriteComponent } from './components/race-activities/text-for-write/text-for-write.component';
 import { CreateRoomComponent } from './components/create-room/create-room.component';
 import { EntranceInRoomComponent } from './components/entrance-in-room/entrance-in-room.component'
+import { LoaderComponent } from './dynamic-components/loader/loader.component'
 
 // FireBase
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // State 
 // Reducer
@@ -34,6 +36,7 @@ import { onlineReducer } from './state/reducers/online.reducer';
 import { usersReducer } from './state/reducers/users.reducer'
 import { finishReducer } from './state/reducers/finish.reducers'
 import { guardReducer } from './state/reducers/guard.reducers'
+
 // Effects
 import { TextEffects } from './state/effects/text.effects'
 import { OnlineEffects } from './state/effects/online.effects';
@@ -57,6 +60,7 @@ import { ClipboardModule } from 'ngx-clipboard';
     StartComponent,
     CountdownComponent,
     ShowResultComponent,
+    LoaderComponent
   ],
   imports: [
     MaterialModule,
@@ -75,7 +79,7 @@ import { ClipboardModule } from 'ngx-clipboard';
       online: onlineReducer,
       users: usersReducer,
       finish: finishReducer,
-      guard: guardReducer
+      guard: guardReducer,
     }),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
     EffectsModule.forRoot([

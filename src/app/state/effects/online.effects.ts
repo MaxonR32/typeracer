@@ -13,11 +13,12 @@ export class OnlineEffects {
 		private actions$: Actions,
 		private onlineService: OnlineService
 	) {}
+	
 	// get text online
 	textOnline$ = createEffect(() => {
 		return this.actions$.pipe(
 			ofType(OnlineActions.getTextOnline),
-			switchMap((roomName) => {
+			switchMap(roomName => {
 				return this.onlineService.getTextOnline(roomName)
 				.pipe(
 					map((words: Word[]) => {
@@ -32,11 +33,12 @@ export class OnlineEffects {
 			})
 		)
 	})
+	
 	// when create room
 	createRoom$ = createEffect(() => {
 		return this.actions$.pipe(
 			ofType(OnlineActions.createRoom),
-			switchMap((roomData) => {
+			switchMap(roomData => {
 				return this.onlineService.createRoom(roomData)
 				.pipe(
 					map(() => OnlineActions.createRoomSuccess())
@@ -44,11 +46,12 @@ export class OnlineEffects {
 			})
 		)
 	})
+	
 	// get users
 	getUsers$ = createEffect(() => {
 		return this.actions$.pipe(
 			ofType(OnlineActions.getUsers),
-			switchMap((roomName) => {
+			switchMap(roomName => {
 				return this.onlineService.getUsers(roomName)
 				.pipe(
 					map((users: User[]) => OnlineActions.getUsersSuccess({users}))
@@ -56,11 +59,12 @@ export class OnlineEffects {
 			})
 		)
 	})	
+	
 	// blockRoom
 	blockRoom$ = createEffect(() => {
 		return this.actions$.pipe(
 			ofType(OnlineActions.blockRoomChange),
-			switchMap((roomName) => {
+			switchMap(roomName => {
 				return this.onlineService.getBlockRoomChange(roomName)
 				.pipe(
 					map((block: boolean) => OnlineActions.blockRoomChangeSuccess({block}))
@@ -68,4 +72,44 @@ export class OnlineEffects {
 			})
 		)
 	})
+
+	// random numbers
+	randomNumber$ = createEffect(() => {
+		return this.actions$.pipe(
+			ofType(OnlineActions.getRandomNumbers),
+			switchMap(roomName => {
+				return this.onlineService.getRandomNumbers(roomName)
+				.pipe(
+					map((randomNumbers: number[]) => OnlineActions.getRandomNumbersSuccess({randomNumbers}))
+				)
+			})
+		)
+	})
+
+	// lap text
+	lapText$ = createEffect(() => {
+		return this.actions$.pipe(
+			ofType(OnlineActions.changeLapText),
+			switchMap((roomName) => {
+				return this.onlineService.getLapText(roomName)
+				.pipe(
+					map((lapText: number) => OnlineActions.changeLapTextSuccess({lapText}))
+				)
+			})
+		)
+	})
+
+
+	// new text
+	newText$ = createEffect(() => {
+		return this.actions$.pipe(
+			ofType(OnlineActions.newText),
+			switchMap(({roomName, randomNumber, lapText}) => {
+				return this.onlineService.newText({roomName, randomNumber, lapText})
+				.pipe(
+					map(() => OnlineActions.newTextSuccess())
+				)
+			})
+		)
+	}) 
 }

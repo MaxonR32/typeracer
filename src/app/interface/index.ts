@@ -30,12 +30,15 @@ export interface User {
 	ready: boolean
 	distance: number
 	wpm: number
+	finish: boolean
+	changeText: boolean
 }
 
 export interface Online {
 	online: boolean
 	roomName: string
 	userName: string
+	randomNumbers?: number[]
 }
 
 export interface UpdateStr<T> {

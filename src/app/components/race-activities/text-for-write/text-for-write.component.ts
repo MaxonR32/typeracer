@@ -21,6 +21,7 @@ export class TextForWriteComponent implements OnInit {
   
   @Input() textForWrite: Word[] 
   @Input() disabledInput: boolean 
+  
   @Output() emitDistance = new EventEmitter<{distance: number, typedEntrie: number}>()
 
   @ViewChild('textBlock') private textBlock: ElementRef<any>

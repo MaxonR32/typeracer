@@ -4,5 +4,6 @@ import * as TextErrorActions from './text-error.actions'
 import * as OnlineActions from './online.actions'
 import * as FinishActions from './finish.actions'
 import * as GuardActions from './guard.actions'
+import * as RandomNumbersActoins from './random-numbers.actions'
 
-export { InputActions, TextActions, TextErrorActions, OnlineActions, FinishActions, GuardActions }
+export { InputActions, TextActions, TextErrorActions, OnlineActions, FinishActions, GuardActions, RandomNumbersActoins }

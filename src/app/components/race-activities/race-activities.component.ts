@@ -12,7 +12,7 @@ import { TextService } from '../../shared/services/text.service'
 import { MaterialServices } from '../../shared/services/material.services'
 import { OnlineService } from '../../shared/services/online.serivce';
 // Ngrx
-import { OnlineActions, TextActions, FinishActions, GuardActions } from '../../state/actions';
+import { OnlineActions, TextActions, FinishActions, GuardActions, RandomNumbersActoins } from '../../state/actions';
 import { TextState } from '../../state/reducers/text.reducer';
 
 import * as fromText from '../../state/selectors/text.selectors'
@@ -44,15 +44,18 @@ export class RaceActivitiesComponent implements OnInit, OnDestroy, AfterViewInit
   users = []
   users$: Observable<User[]>
   exp: Observable<any>
-
+  randomNumbers$: Observable<any>
   online: boolean
   createRoomState: boolean
   userName: string
   randomNumber: number 
   roomName: string
-  allReady: boolean = false
   blockRoom: boolean
   userDistance: number = 0
+
+  allFinished: boolean = false
+  allChangeText: boolean = false
+  allReady: boolean = false
 
   windowResize: number = 1
 
@@ -60,6 +63,12 @@ export class RaceActivitiesComponent implements OnInit, OnDestroy, AfterViewInit
   seconds: number = 0
   interval: any
   disabledInput: boolean = false
+
+  wantChangeText: boolean = false
+
+  lapText: number
+  randomNumbers: number[]
+
   
   subscribeToUserReadyState: Subscription
   subscribeToTextOnline: Subscription
@@ -68,9 +77,12 @@ export class RaceActivitiesComponent implements OnInit, OnDestroy, AfterViewInit
 
   blockBtnReady: boolean = true
   blockBtnReset: boolean = true
+  blockBtnNewText: boolean = true
 
   readonly onDestroyBeforeRace = new Subject<void>()
   readonly onDestroyAfterCheck = new Subject<void>()
+  readonly onDestroyAfterChangeText = new Subject<void>()
+  readonly onDestroyIfTextIsnull = new Subject<void>()
 
   @ViewChild(TextForWriteComponent) textForWriteComponent: TextForWriteComponent
   @ViewChild(CountdownComponent) countdownComponent: CountdownComponent
@@ -87,17 +99,17 @@ export class RaceActivitiesComponent implements OnInit, OnDestroy, AfterViewInit
     private ref: ChangeDetectorRef,
     private scroller: ViewportScroller
   ) {
-    // this.blockRoom$ = this.store.pipe(s)
     this.text$ = this.store.pipe(select(fromText.selectText))
     this.finish$ = this.store.pipe(select(fromFinish.selectFinisht))
-    this.randomNumber = Math.floor(Math.random() * 1250)
- 
+    this.randomNumber = Math.floor(Math.random() * 1250) //1250
+   
     this.store.pipe(select(fromOnlineSelector.selectOnline)).subscribe(data => {
       this.online = data.online
       this.roomName = data.roomName
       this.userName = data.userName
       this.blockRoom = data.block
-      console.log(this.userName)
+      this.randomNumbers = data.randomNumbers
+      this.lapText = data.lapText
     })
   }
 
@@ -105,10 +117,9 @@ export class RaceActivitiesComponent implements OnInit, OnDestroy, AfterViewInit
     this.store.dispatch(OnlineActions.blockRoomChange({roomName: this.roomName}))
     this.subscribeFinish()
    
-   // online join in room
+    // online join in room
     if(this.online) {
       this.users$ = this.store.pipe(select(fromUsers.selectUsers))
-
       this.forStartRaceOnline()
     }
     // correct the window Size
@@ -119,7 +130,6 @@ export class RaceActivitiesComponent implements OnInit, OnDestroy, AfterViewInit
     } else {
       this.windowResize = 1
     } 
-  
   }
 
   ngAfterViewInit() {
@@ -139,17 +149,17 @@ export class RaceActivitiesComponent implements OnInit, OnDestroy, AfterViewInit
           // delete user from db 
           this.onlineService.deleteUser({roomName: this.roomName, userName: this.userName})
         }
-          // delete users from ngrx 
-          this.store.dispatch(OnlineActions.deleteUser())
-          // false online
-          this.store.dispatch(OnlineActions.changeOnlineToFalse())
-          // clear text from ngrx
-          this.store.dispatch(TextActions.clearTextOnDestroy())
-          // go to home
-          this.router.navigate(['home'])
-          this.store.dispatch(FinishActions.finishFalse())
-          this.store.dispatch(GuardActions.changeGuardFalse())  
-          this.subscribeToDeleteUser.unsubscribe()
+        // delete users from ngrx 
+        this.store.dispatch(OnlineActions.deleteUser())
+        // false online
+        this.store.dispatch(OnlineActions.changeOnlineToFalse())
+        // clear text from ngrx
+        this.store.dispatch(TextActions.clearTextOnDestroy())
+        // go to home
+        this.router.navigate(['home'])
+        this.store.dispatch(FinishActions.finishFalse())
+        this.store.dispatch(GuardActions.changeGuardFalse())  
+        this.subscribeToDeleteUser.unsubscribe()
         
       })
     } else {
@@ -194,12 +204,10 @@ export class RaceActivitiesComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   subscribeFinish() {
-     this.subscribeToFinish = this.finish$.subscribe(data => {
-
+    this.subscribeToFinish = this.finish$.subscribe(data => {
       if(data.finish === true) {
         this.subscribeToFinish.unsubscribe()
-   
-        this.blockBtnReset = false
+      
         // open modal with result
         this.showResult()
         // stop countDown
@@ -209,9 +217,23 @@ export class RaceActivitiesComponent implements OnInit, OnDestroy, AfterViewInit
     })
   }
 
+  subsBlockBtnReset() {
+    this.users$.pipe().subscribe(users => {
+      if(users.length) {
+         this.allFinished = users.every(user => user.finish === true)
+      } 
+      if(this.allFinished === true) {
+        this.blockBtnReset = false
+      }
+    }) 
+  }
+
   forStartRaceOnline() {
     this.store.dispatch(OnlineActions.getTextOnline({roomName: this.roomName}))
     this.store.dispatch(OnlineActions.getUsers({roomName: this.roomName}))
+    this.store.dispatch(OnlineActions.getRandomNumbers({roomName: this.roomName}))
+    this.store.dispatch(OnlineActions.changeLapText({roomName: this.roomName, lapText: this.lapText}))
+
     this.users$.pipe(takeUntil(this.onDestroyAfterCheck)).subscribe(users => {
       
       if(users.length > 6) { // max is 7
@@ -224,7 +246,6 @@ export class RaceActivitiesComponent implements OnInit, OnDestroy, AfterViewInit
 
         this.onDestroyAfterCheck.next()
         this.afterCheckUsersLength()
-
       }
     })
   }
@@ -255,31 +276,86 @@ export class RaceActivitiesComponent implements OnInit, OnDestroy, AfterViewInit
     }
   }
 
-  showResult() {
-    this.countWord = this.textService.getResult(this.typedEntrie, this.seconds)
+  changeText() {
+    this.blockBtnNewText = true
+    this.wantChangeText = true
+    this.onlineService.chageNewTextState({roomName: this.roomName, userName: this.userName, changeText: true})
+    this.subToChangeText()    
+  }
+
+  subToChangeText() {
+    this.users$.pipe(takeUntil(this.onDestroyAfterChangeText)).subscribe(users => {
+      if(users.length) {
+        this.allChangeText = users.every(user => user.changeText === true)
+      }
+
+      if(this.allChangeText) {
+        if(this.lapText === 20) {
+          this.lapText = -1
+        }
+        this.wantChangeText = false
+
+        this.lapText += 1
+        let num = this.randomNumbers[this.lapText]    
+        this.store.dispatch(OnlineActions.newText({roomName: this.roomName, randomNumber: num, lapText: this.lapText}))
+        this.onlineService.chageNewTextState({roomName: this.roomName, userName: this.userName, changeText: false})
+        this.onDestroyAfterChangeText.next()
+        this.ifTextIsnull()
+      }
+    })
+  }
+
+  ifTextIsnull() {
+      this.text$.pipe(takeUntil(this.onDestroyIfTextIsnull)).subscribe(text => {
+        this.blockBtnReady = true
+          if(text.length === 0) {
+            setTimeout(() => {
+              this.store.dispatch(OnlineActions.getTextOnline({roomName: this.roomName}))
+              this.onDestroyIfTextIsnull.next()
+            }, 1000)
+              this.blockBtnReady = false   
+          } else {
+            this.onDestroyIfTextIsnull.next()            
+            this.blockBtnReady = false   
+          }
+
+      })  
     
+  }
+
+  showResult() {
+    if(!this.online) {
+      this.blockBtnReset = false
+    }
+    this.countWord = this.textService.getResult(this.typedEntrie, this.seconds)
     if(this.online) {
       this.onlineService.blockRoom({roomName: this.roomName, block: false})
       this.onlineService.changeReadyState({userName: this.userName, roomName: this.roomName, ready: false})   
+      this.onlineService.changeFinishState({userName: this.userName, roomName: this.roomName, finish: true})   
       this.onlineService.saveWpm({userName: this.userName, roomName: this.roomName, wpm: this.countWord})
+      this.subsBlockBtnReset()
     }
    
     const dialogRef = this.dialog.open(ShowResultComponent, this.materialService.opneModalResult(this.countWord, this.online))
   }
 
   reset() {
+    this.allFinished = false
     this.blockBtnReady = false
     this.blockBtnReset = true
+    this.blockBtnNewText = false
+    this.wantChangeText = false
+
     this.store.dispatch(FinishActions.finishFalse())
 
     this.textForWriteComponent.onRestart()
     this.countdownComponent.restartCountdown()
-
     
     // if online
     if(this.online) {
-
       this.onlineService.resetData({distance: 0, roomName: this.roomName, userName: this.userName, wpm: 0})
+      this.onlineService.changeFinishState({userName: this.userName, roomName: this.roomName, finish: false})   
+
       this.store.dispatch(TextActions.clearTextOnDestroy())
 
       this.forStartRaceOnline()
@@ -289,6 +365,7 @@ export class RaceActivitiesComponent implements OnInit, OnDestroy, AfterViewInit
     else {
       this.store.dispatch(TextActions.clearTextOnDestroy())
       this.forStartRaceOffline()
+      this.subscribeFinish()
     }
   }
 
@@ -301,10 +378,9 @@ export class RaceActivitiesComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   start() {  
-   if(this.online) {
+    if(this.online) {
       this.onlineService.blockRoomChange({roomName: this.roomName, block: true})
-   } 
-
+    } 
     this.typedEntrie = 0 
     this.onDestroyBeforeRace.next()
     this.seconds = 0
@@ -332,6 +408,10 @@ export class RaceActivitiesComponent implements OnInit, OnDestroy, AfterViewInit
   ready() {
     console.log(this.userName)
     this.blockBtnReady = true
+    this.blockBtnReset = true
+    this.blockBtnNewText = true
+    this.wantChangeText = false
+
     this.onlineService.changeReadyState({userName: this.userName, roomName: this.roomName, ready: true})
   }
 
@@ -341,6 +421,6 @@ export class RaceActivitiesComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   clc() {
-    this.scroller.scrollToPosition([0, 110])
+    console.log('reset', this.blockBtnReset, 'ready', this.blockBtnReady, 'allFinished', this.allFinished)
   }
 }

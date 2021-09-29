@@ -12,7 +12,7 @@ export const changeOnlineToFalse = createAction(
 
 export const createRoom = createAction(
 	'[Online] Create Room',
-	props<{roomData: {roomName: string, userName: string, randomNumber: number}}>()
+	props<{roomData: {roomName: string, userName: string, randomNumber: number, randomNumbers: number[]}}>()
 )
 export const createRoomSuccess = createAction(
 	'[Online] Create Room Success'
@@ -83,4 +83,34 @@ export const blockRoomChange = createAction(
 export const blockRoomChangeSuccess = createAction(
 	'[Online] Block Room Success',
 	props<{block: boolean}>()
+)
+
+
+export const getRandomNumbers = createAction(
+	'[Online] Get Random Numbers',
+	props<{roomName: string}>()
+)
+
+export const getRandomNumbersSuccess = createAction(
+	'[Online] Get Random Numbers Success',
+	props<{randomNumbers: number[]}>()
+)
+
+export const changeLapText = createAction(
+	'[Online] Change Lap Text',
+	props<{roomName: string, lapText: number}>()
+)
+
+export const changeLapTextSuccess = createAction(
+	'[Online] Change Lap Text Success',
+	props<{lapText: number}>()
+)
+
+export const newText = createAction(
+	'[Online] New Text',
+	props<{roomName: string, randomNumber: number, lapText: number}>()
+)
+
+export const newTextSuccess = createAction(
+	'[Online] New Text Success'
 )

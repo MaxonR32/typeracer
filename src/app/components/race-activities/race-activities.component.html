@@ -11,14 +11,19 @@
 				<div *ngIf="online; else offlineBlockUser">
 					<div class="text-name" *ngFor="let user of users$ | async">
 						<div class="block-name" [ngStyle]="setStyleUserDistance(user.distance)">
-							<span class="user-name">{{user.userName.slice(0, user.userName.length - 10)}}</span><span class="user-state" [ngClass]="{
+							<span class="user-name">
+								{{user.userName.slice(0, user.userName.length - 10)}}
+								<span *ngIf="user.changeText === true" class='want-change-text'>
+									cahnge text
+								</span>
+							</span>
+							<span class="user-state" [ngClass]="{
 								'ready': user.ready === true,
-								'not-ready': user.ready === false	
+								'not-ready': user.ready === false
 							}"></span>
 						</div>
 					</div>
 				</div>
-				
 			</div>	
 		</div>
 
@@ -29,14 +34,19 @@
 
 		<!-- text and input -->
 		<div class="">
-			<app-text-for-write (emitDistance)="changeUserDistance($event)" [disabledInput]="disabledInput"  [textForWrite]="text$ | async"></app-text-for-write>
+			<app-text-for-write (emitDistance)="changeUserDistance($event)" [disabledInput]="disabledInput" [textForWrite]="text$ | async"></app-text-for-write>
 		</div>	
 	</div>
 
 	<!-- ready button and reset button -->
-	<div class="button-reset-ready-block">
+	<div class="buttons-block">
 		<!-- ready button -->
-		<button mat-raised-button color="accent" class="button-ready" [disabled]="blockBtnReady || blockRoom || blockBtnReset === false" (click)="ready()">Ready</button>
+		<div>
+			<button *ngIf="online" mat-raised-button color="accent" class="button-ready" [disabled]="blockBtnReady || blockRoom || blockBtnReset === false" (click)="ready()">Ready</button>
+			<button *ngIf="online" mat-raised-button color="accent" [disabled]="blockBtnNewText" (click)="changeText()">New Text</button>
+		</div>
+		
+		<!-- new text button -->
 		<!-- reset button -->
 		<button mat-raised-button color="warn" class="button-reset" [disabled]="blockBtnReset" (click)="reset()">New Race</button>
 	</div>
@@ -52,5 +62,8 @@
 	<div class="start-component" *ngIf="counter > 0">
 		<app-start [counter]="counter"></app-start>	
 	</div>
+<!-- <button (click)="clc()">Test</button> -->
+	
 </div>
+
 

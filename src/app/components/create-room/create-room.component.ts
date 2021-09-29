@@ -21,6 +21,8 @@ export class CreateRoomComponent implements OnInit {
   nameRoom: string
   nameUser: string
   uuidNameUser: string
+
+  arrRandomNumber: number[] = []
   
   constructor(
     private store: Store,
@@ -52,7 +54,11 @@ export class CreateRoomComponent implements OnInit {
   }
 
   createRoom() {
-    this.store.dispatch(OnlineActions.createRoom({roomData: {roomName: this.roomName, userName: this.createUserName(), randomNumber: this.randomNumber}}))
+    for(let i = 0; i < 20; i++) {
+      let random = Math.floor(Math.random() * 1250)
+      this.arrRandomNumber.push(random)
+    }
+    this.store.dispatch(OnlineActions.createRoom({roomData: {roomName: this.roomName, userName: this.createUserName(), randomNumber: this.randomNumber, randomNumbers: this.arrRandomNumber}}))
     this.store.dispatch(OnlineActions.changeOnlineToTrue({onlineData: {online: true, roomName: this.roomName, userName: this.createUserName()}}))
     this.route.navigate(['/race'])
   }

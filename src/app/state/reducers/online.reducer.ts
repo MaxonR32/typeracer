@@ -1,12 +1,14 @@
 import { createReducer, on, Action } from '@ngrx/store'
-import { OnlineActions } from '../actions'
+import { OnlineActions, RandomNumbersActoins } from '../actions'
 
 export interface OnlineState  {
 	online: boolean
 	roomName: string
 	userName: string
-	ready: boolean,
+	ready: boolean
 	block: boolean
+	lapText: number
+	randomNumbers: number[]
 }
 
 export const initialState: OnlineState = {
@@ -14,7 +16,9 @@ export const initialState: OnlineState = {
 	roomName: '',
 	userName: '',
 	ready: false,
-	block: false
+	block: false,
+	lapText: 0, 
+	randomNumbers: []
 }
 
 export const onlineReducerCreaete = createReducer(
@@ -23,21 +27,31 @@ export const onlineReducerCreaete = createReducer(
 		...state,
 		online: true,
 		roomName: onlineData.roomName,
-		userName: onlineData.userName
+		userName: onlineData.userName,
 	})),
 	on(OnlineActions.changeOnlineToFalse, state => ({
 		...state,
 		online: false,
 		roomName: '',
-		userName: ''
+		userName: '',
+		randomNumbers: [],
+		lapText: 0
 	 })),
 	on(OnlineActions.changeReadyStateSuccess, (state, {ready}) => ({
 		...state,
-		ready: ready
+		ready
 	})),
 	on(OnlineActions.blockRoomChangeSuccess, (state, {block}) => ({
 		...state,
 		block
+	})),
+	on(OnlineActions.getRandomNumbersSuccess, (state, {randomNumbers}) => ({
+		...state,
+		randomNumbers
+	})),
+	on(OnlineActions.changeLapTextSuccess, (state, {lapText}) => ({
+		...state,
+		lapText
 	}))
 )
 

@@ -5,20 +5,22 @@ import { MatDialogModule } from '@angular/material/dialog'
 import { MatButtonModule } from '@angular/material/button'
 import { MatSnackBarModule } from '@angular/material/snack-bar' 
 import { MatFormFieldModule } from '@angular/material/form-field'
-
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner' 
 @NgModule({
   imports: [
     CommonModule,
     MatDialogModule,
     MatButtonModule,
     MatSnackBarModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatProgressSpinnerModule
   ],
   exports: [
     MatDialogModule,
     MatButtonModule,
     MatSnackBarModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatProgressSpinnerModule
   ]
 })
 export class MaterialModule { }

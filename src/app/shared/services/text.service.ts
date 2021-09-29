@@ -33,7 +33,7 @@ export class TextService {
   globalError: boolean = false
   data: any
   
-  sliceNumber: number = 60
+  sliceNumber: number = 10
 
   constructor(
     private db: AngularFireDatabase,
@@ -41,10 +41,6 @@ export class TextService {
     private store: Store,
   ) {}
 
-  get getRandomNumber(): number {
-    let random = Math.floor(Math.random() * 1250)
-    return random
-  }
 
   getText(): Observable<Word[]> {
     let random = Math.floor(Math.random() * 1250)
@@ -389,41 +385,7 @@ export class TextService {
     return obs
   }
 
-  changeCursors(data): Observable<Update<Word>> {
-    let inputLength
-    this.store.pipe(select(fromInputSelecor.selectInput)).subscribe(d => {
-      inputLength = d.typedValue
-    })
-    let changedArray: Letter[] = []
-    let result
-    let gettedWord = data.gettedWord
-
-    let startCursor = data.startCursor
-
-    let obs = Observable.create(observer => {
-      changedArray = gettedWord.letters.map(letter => {
-        if(startCursor === letter.id && startCursor <= inputLength.length) {
-          return {
-            ...letter,
-            cursor: true
-          }
-        }
-        return {
-          ...letter,
-          cursor: false
-        }
-     })
-     result = {
-       id: gettedWord.id,
-       changes: {
-         letters: changedArray
-       }
-     }
-
-     observer.next(result)
-    })
-    return obs 
-  }
+  
 
   changeCursor(data): Observable<Update<Word>> {
     let changedArray: Letter[] = []
