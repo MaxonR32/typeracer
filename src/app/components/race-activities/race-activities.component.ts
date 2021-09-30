@@ -314,8 +314,9 @@ export class RaceActivitiesComponent implements OnInit, OnDestroy, AfterViewInit
               this.onDestroyIfTextIsnull.next()
             }, 1000)
               this.blockBtnReady = false   
-          } else {
-            this.onDestroyIfTextIsnull.next()            
+          } 
+          else {
+          //   this.onDestroyIfTextIsnull.next()            
             this.blockBtnReady = false   
           }
 
@@ -380,6 +381,9 @@ export class RaceActivitiesComponent implements OnInit, OnDestroy, AfterViewInit
   start() {  
     if(this.online) {
       this.onlineService.blockRoomChange({roomName: this.roomName, block: true})
+      this.onlineService.chageNewTextState({roomName: this.roomName, userName: this.userName, changeText: false})
+      this.onDestroyIfTextIsnull.next()
+
     } 
     this.typedEntrie = 0 
     this.onDestroyBeforeRace.next()

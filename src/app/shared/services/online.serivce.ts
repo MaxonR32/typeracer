@@ -54,7 +54,7 @@ export class OnlineService {
       
       
       // when create new room
-		  let str = text.slice(randomNumber, randomNumber + 10)
+		  let str = text.slice(randomNumber, randomNumber + 60)
 		  return str.join(' ')
 		}))
 	}
