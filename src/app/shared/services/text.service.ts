@@ -33,7 +33,7 @@ export class TextService {
   globalError: boolean = false
   data: any
   
-  sliceNumber: number = 10
+  sliceNumber: number = 60
 
   constructor(
     private db: AngularFireDatabase,
